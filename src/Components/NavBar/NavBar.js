@@ -56,7 +56,7 @@ const NavBar = () => {
               <Sidebar setMobileOpen = {setMobileOpen}/>
             </Drawer>
         ):(
-          <Drawer classes = {{paper: classes.drawerPaper}} variiant="permanent" open>
+          <Drawer classes = {{paper: classes.drawerPaper}} variiant="permanent" open hideBackdrop={true}>
             <Sidebar setMobileOpen = {setMobileOpen}/>
           </Drawer>
         )}
