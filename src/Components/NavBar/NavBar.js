@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import {useTheme} from '@mui/material/styles'
 import Sidebar from '../Sidebar/Sidebar';
 import useStyles from './styles';
+import Search from '../Search/Search'
 
 const NavBar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -24,7 +25,7 @@ const NavBar = () => {
         <IconButton color="inherit" sx={{ml: 1}} onClick={()=>{}}>
             {theme.palette.mode === 'dark'? <Brightness7/> : <Brightness4/>}
         </IconButton>
-        {!isMobile && 'Search...'}
+        {!isMobile && <Search/>}
         <div>
           {!isAuthenticated ? (
               <Button color="inherit" onClick={()=>{}}>
@@ -38,7 +39,7 @@ const NavBar = () => {
               </Button>
           )}
         </div>
-        {isMobile && 'Search...'}
+        {isMobile && <Search/>}
       </Toolbar>
     </AppBar>
 
@@ -47,7 +48,7 @@ const NavBar = () => {
         {isMobile ?(
             <Drawer               
             variant = "temporary"
-            anchor = "right"
+            anchor = "left"
             open = {mobileOpen}
             onClose={()=> setMobileOpen((prevMobileOpen)=>!prevMobileOpen)}
             classes = {{paper: classes.drawPaper}}
@@ -56,8 +57,8 @@ const NavBar = () => {
               <Sidebar setMobileOpen = {setMobileOpen}/>
             </Drawer>
         ):(
-          <Drawer classes = {{paper: classes.drawerPaper}} variiant="permanent" open hideBackdrop={true}>
-            <Sidebar setMobileOpen = {setMobileOpen}/>
+          <Drawer classes = {{paper: classes.drawerPaper}} variant="permanent" open ={true} >
+            <Sidebar setMobileOpen = {setMobileOpen} />
           </Drawer>
         )}
 

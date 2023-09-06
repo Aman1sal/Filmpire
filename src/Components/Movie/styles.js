@@ -4,10 +4,31 @@ export default makeStyles((theme)=>({
     movie: {
         padding: '10px',
     },
+    links: {
+        alignItems: 'center',
+        textDecoration: 'none',
+        fontWeight: 'bolder',
+        [theme.breakpoints.up('xs')]: {
+            display: 'flex',
+            flexDirection: 'column',
+        },
+        '&:hover':{
+            cursor: 'pointer',
+        },
+    },
+    image: {
+        borderRadius: '20px',
+        height: '360px',
+        marginBottom: '10px',
+        '&:hover':{
+            transform: 'scale(1.05)'
+        },
+    },
+
     title:{
-        color: theme.paltte.text.primary,
+        color: theme.palette.text.primary,
         textOverflow: 'ellipsis',
-        width: '230px',
+        width: '180px',
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         marginTop: '10px',
