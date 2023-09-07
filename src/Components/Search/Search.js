@@ -23,7 +23,7 @@ const Search = () => {
         <TextField onKeyPress={handleKeyPress} value={query} onChange={(e)=> setquery(e.target.value)} variant='standard' InputProps={{
             className: classes.input,
             startAdornment: (
-                <InputAdornment poistion="start"><SearchIcon/></InputAdornment>
+                <InputAdornment position="start"><SearchIcon/></InputAdornment>
             )
         }}></TextField>
     </div>
