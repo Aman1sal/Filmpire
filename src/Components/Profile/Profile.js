@@ -1,14 +1,22 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Typography, Button, Box } from '@mui/material'
 import { useSelector } from 'react-redux/es/hooks/useSelector'
 import { userSelector } from '../../features/auth'
 import { ExitToApp } from '@mui/icons-material'
+import { useGetListQuery } from '../../services/TMDB'
+import {RatedCards} from '..'
 
 const Profile = () => {
   const {user} = useSelector(userSelector);
-  console.log(user);
+  
+  const {data: favoriteMovies, refetch: refetchFavorites} = useGetListQuery({listName: 'favorite/movies', accountId: user.id, sessionId: localStorage.getItem('session_id'), page: 1})
+  const {data: WatchListMovies, refetch: refetchWatchlisted} = useGetListQuery({listName: 'watchlist/movies', accountId: user.id, sessionId: localStorage.getItem('session_id'), page: 1})
 
-  const favoriteMovies = [];
+  useEffect(()=>{
+    refetchFavorites();
+    refetchWatchlisted();
+  },[]);
+
   const logout = () =>{
     localStorage.clear();
     window.location.href = '/';
@@ -19,9 +27,10 @@ const Profile = () => {
         <Typography variant="h4" gutterBottom>My Profile</Typography>
         <Button color="inherit" onClick={logout}>Logout &nbsp; <ExitToApp/> </Button>
       </Box>
-      {!favoriteMovies.length ? <Typography variant = "h5">Add favourite or watchlist some movies to see them here! </Typography>
+      {!favoriteMovies?.results?.length && !WatchListMovies?.results?.length ? <Typography variant = "h5">Add favourite or watchlist some movies to see them here! </Typography>
       :(<Box>
-        Favourite Movies
+            <RatedCards title="Favorite Movies" data={favoriteMovies} />
+            <RatedCards title="Watchlist" data={WatchListMovies} />
         </Box>)}
     </Box>
   )

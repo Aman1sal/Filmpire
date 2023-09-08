@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import { Modal, Typography, Button, ButtonGroup, Grid, Box, CircularProgress, useMediaQuery, Rating  } from '@mui/material'
 import { Movie as MovieIcon, Theaters, Language, PlusOne, Favorite, FavoriteBorderOutlined, Remove, ArrowBack } from '@mui/icons-material'
 import { Link, useParams } from 'react-router-dom'
@@ -10,27 +10,53 @@ import genreIcons from '../../assets/genres'
 import { selectGenreOrcategory } from '../../features/currentGenreOrCategory'
 import { useGetRecommendationsQuery } from '../../services/TMDB'
 import {MovieList} from '..';
+import { userSelector } from '../../features/auth'
+import { useGetListQuery } from '../../services/TMDB'
 
 
 const MovieInformation = () => {
 
+  const {user} = useSelector(userSelector)
   const {id} = useParams();
-  const {data, isFetching, error} = useGetMovieQuery(id);
+
   const classes = useStyles();
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
 
+  const {data, isFetching, error} = useGetMovieQuery(id);
+  const {data: favoriteMovies} = useGetListQuery({listName: 'favorite/movies', accountId: user.id, sessionId: localStorage.getItem('session_id'), page: 1})
+  const {data: WatchListMovies} = useGetListQuery({listName: 'watchlist/movies', accountId: user.id, sessionId: localStorage.getItem('session_id'), page: 1})
   const {data: recommendations, isFetching: isRecommendationsFetching} = useGetRecommendationsQuery({list: '/recommendations', movie_id: id});
 
-  const isMovieFavorited = true;
-  const isMovieWatchlisted = true;
+  const [isMovieFavorited, setisMovieFavorited] = useState(false);
+  const [isMovieWatchlisted, setisMovieWatchlisted] = useState(false);
 
-  const addToFavourites = () =>{
+  useEffect(()=>{
+      setisMovieFavorited(!!favoriteMovies?.results?.find((movie)=>movie?.id === data?.id))
+  },[favoriteMovies, data])
 
+  useEffect(()=>{
+    setisMovieWatchlisted(!!WatchListMovies?.results?.find((movie)=>movie?.id === data?.id))
+},[WatchListMovies, data])
+
+  const addToFavourites = async () => {
+    const baseUrl = 'https://api.themoviedb.org/3';
+    await axios.post(`${baseUrl}/account/${user.id}/favorite?api_key=${process.env.REACT_APP_TMDB_KEY}&session_id=${localStorage.getItem('session_id')}`, {
+      media_type: 'movie',
+      media_id: id,
+      favorite: !isMovieFavorited,
+    });
+    setisMovieFavorited((prev)=>!prev);
   }
 
-  const addToWatchList = () =>{
-    
+  const addToWatchList = async () =>{
+    const baseUrl = 'https://api.themoviedb.org/3';
+    await axios.post(`${baseUrl}/account/${user.id}/watchlist?api_key=${process.env.REACT_APP_TMDB_KEY}&session_id=${localStorage.getItem('session_id')}`, {
+      media_type: 'movie',
+      media_id: id,
+      watchlist: !isMovieWatchlisted,
+    });
+    setisMovieWatchlisted((prev)=>!prev);
   }
 
 
@@ -52,7 +78,7 @@ const MovieInformation = () => {
 
   return (
     <Grid container className={classes.containerSpaceAround}>
-      <Grid item sm={12} lg={4}>
+      <Grid item sm={12} lg={4} style={{display:'flex', marginBottom: '30px'}}>
       <img
           src={`https://image.tmdb.org/t/p/w500/${data?.poster_path}`}
           className={classes.poster}
@@ -102,9 +128,9 @@ const MovieInformation = () => {
         <Grid item container spacing={2}>
           {data && data.credits.cast.map((character, i)=>
            character.profile_path && (
-              <Grid key={i} item xs={4} md={2} component={Link} to={`/actors/${character.id}`} style={{textDecoration: 'none'}}>
+              <Grid key={i} item xs={4} md={2} component={Link} to={`/actors/${character.id}`} style={{textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
                 <img src={`https://image.tmdb.org/t/p/w500/${character.profile_path}`} alt={character.name} className={classes.castImage} />
-                <Typography color="textPrimary" align="center">{character?.name}</Typography>
+                <Typography color="textPrimary" >{character?.name}</Typography>
                 <Typography color="textSecondary" align="center">{character.character.split('/')[0]}</Typography>
                </Grid>
           )).slice(0,6)}
@@ -137,21 +163,22 @@ const MovieInformation = () => {
           </Grid>
         </Grid>
       </Grid>
-      <Box marginTop="5rem" width="100%">
+      <Box marginTop="5rem" width="100%" >
               <Typography variant="h3" gutterBottom align="center">
                 You might also like
               </Typography>
-              {recommendations
+            {recommendations
               ? <MovieList movies={recommendations} numberofMovies={8}/>
               : <Box>Sorry Nothing was found</Box>
             }
             </Box>
 
             <Modal closeAfterTransition className={classes.modal} open={open} onClose={()=>{setOpen(false)}}>
+              <>
               {data?.videos?.results?.length > 0 && (
-                <iframe src={`https://www.youtube.com/embed/${data.videos.results[0].key}`} frameborder="0" autoplay className={classes.video} title="Trailer" allow="autoplay"/>
+                <iframe src={`https://www.youtube.com/embed/${data.videos.results[0].key}`} frameborder="0" autoplay className={classes.video} title="Trailer" allow="autoplay" />
               )}
-
+              </>
             </Modal>
     </Grid>
   )
