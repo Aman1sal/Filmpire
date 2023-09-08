@@ -4,7 +4,8 @@ import { useSelector } from 'react-redux/es/hooks/useSelector'
 import { userSelector } from '../../features/auth'
 import { ExitToApp } from '@mui/icons-material'
 import { useGetListQuery } from '../../services/TMDB'
-import {RatedCards} from '..'
+import RatedCards from '../RatedCards/RatedCards'
+
 
 const Profile = () => {
   const {user} = useSelector(userSelector);

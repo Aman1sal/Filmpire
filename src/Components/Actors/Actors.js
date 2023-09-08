@@ -28,7 +28,7 @@ const Actors = () => {
     if(error){
       return(
         <Box display="flex" justifyContent="center" alignItems="center">
-          <Button startIcon={<ArrowBack/>} onClick={()=>history.goBack()} color="primary">Go Back</Button>
+          <Button startIcon={<ArrowBack/>} onClick={()=>history(-1)} color="primary">Go Back</Button>
         </Box>
       )
     }
@@ -53,7 +53,7 @@ const Actors = () => {
             <Button variant='contained' color='primary' target='_blank' href={`https://www.imdb.com/name/${data?.imdb_id}`}>
               IMDB
             </Button>
-            <Button startIcon = {<ArrowBack/>} onClick={()=>history.goBack()} color='primary'>
+            <Button startIcon = {<ArrowBack/>} onClick={()=>history(-1)} color='primary'>
               Back
             </Button>
           </Box>

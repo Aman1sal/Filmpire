@@ -11,11 +11,11 @@ export const moviesApi = axios.create({
 export const fetchToken = async()=>{
     try{
             const {data} = await moviesApi.get('/authentication/token/new');
-            const token = data.request_token;
 
-            if(data.success){
-                localStorage.setItem('request_token', token);
-                window.location.href = `https://www.themoviedb.org/authenticate/${token}?redirect_to=${window.location.origin}/approved`;
+            if (data.success) {
+              localStorage.setItem('request_token', data.request_token);
+        
+              window.location.href = `https://www.themoviedb.org/authenticate/${data.request_token}?redirect_to=${window.location.origin}/approved`;
             }
     
         } catch(error){
