@@ -20,15 +20,16 @@ const redLogo = 'https://fontmeme.com/permalink/210930/6854ae5c7f76597cf8680e48a
 
 const Sidebar = ({setMobileOpen}) => {
 
-    // const {genreIdOrCategoryName} = useSelector((state)=> state.currentGenreOrCategory);
     const theme = useTheme();
     const classes = useStyles();
     const {data, isFetching} = useGetGenresQuery();
     const dispatch = useDispatch();
+    const { genreIdOrCategoryName } = useSelector((state) => state.currentGenreOrcategory);
 
-    // useEffect(()=>{
-    //     setMobileOpen(false);
-    // },[genreIdOrCategoryName])
+
+    useEffect(()=>{
+        setMobileOpen(false);
+    },[genreIdOrCategoryName])
 
   return (
     <>
@@ -39,7 +40,7 @@ const Sidebar = ({setMobileOpen}) => {
     <List>
         <ListSubheader>Categories</ListSubheader>
         {demoCategories.map(({label, value})=>(
-            <Link key={label} className={classes.links}>
+            <Link key={label} className={classes.links} to="/">
             <ListItem onClick={()=>dispatch(selectGenreOrcategory(value))}>
             <ListItemIcon>
                     <img src={genreIcons[label.toLowerCase()]} className={classes.genreImage} height={30} alt="icons" />
@@ -59,7 +60,7 @@ const Sidebar = ({setMobileOpen}) => {
           </Box>
         )
         :data.genres.map(({name, id})=>(
-            <Link key={name} className={classes.links}>
+            <Link key={name} className={classes.links} to="/">
             <ListItem onClick={()=>dispatch(selectGenreOrcategory(id))}>
                 <ListItemIcon>
                     <img src={genreIcons[name.toLowerCase()]} className={classes.genreImage} height={30} alt="icons" />

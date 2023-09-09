@@ -24,9 +24,10 @@ const MovieInformation = () => {
   const [open, setOpen] = useState(false);
 
   const {data, isFetching, error} = useGetMovieQuery(id);
-  const {data: favoriteMovies} = useGetListQuery({listName: 'favorite/movies', accountId: user.id, sessionId: localStorage.getItem('session_id'), page: 1})
+  const { data: favoriteMovies } = useGetListQuery({listName: 'favorite/movies', accountId: user.id, sessionId: localStorage.getItem('session_id'), page: 1 });
   const {data: WatchListMovies} = useGetListQuery({listName: 'watchlist/movies', accountId: user.id, sessionId: localStorage.getItem('session_id'), page: 1})
   const {data: recommendations, isFetching: isRecommendationsFetching} = useGetRecommendationsQuery({list: '/recommendations', movie_id: id});
+
 
   const [isMovieFavorited, setisMovieFavorited] = useState(false);
   const [isMovieWatchlisted, setisMovieWatchlisted] = useState(false);
@@ -40,14 +41,20 @@ const MovieInformation = () => {
 },[WatchListMovies, data])
 
   const addToFavourites = async () => {
-    const baseUrl = 'https://api.themoviedb.org/3';
-    await axios.post(`${baseUrl}/account/${user.id}/favorite?api_key=${process.env.REACT_APP_TMDB_KEY}&session_id=${localStorage.getItem('session_id')}`, {
-      media_type: 'movie',
-      media_id: id,
-      favorite: !isMovieFavorited,
-    });
-    setisMovieFavorited((prev)=>!prev);
-  }
+
+    await axios.post(
+      `https://api.themoviedb.org/3/account/${user.id}/favorite?api_key=${
+          process.env.REACT_APP_TMDB_KEY
+      }&session_id=${localStorage.getItem("session_id")}`,
+      {
+          media_type: "movie",
+          media_id: id,
+          favorite: !isMovieFavorited,
+      }
+  );
+
+  setisMovieFavorited((prev) => !prev);
+};
 
   const addToWatchList = async () =>{
     const baseUrl = 'https://api.themoviedb.org/3';
@@ -78,7 +85,7 @@ const MovieInformation = () => {
 
   return (
     <Grid container className={classes.containerSpaceAround}>
-      <Grid item sm={12} lg={4} style={{display:'flex', marginBottom: '30px'}}>
+      <Grid item sm={12} lg={4} alignItems="center">
       <img
           src={`https://image.tmdb.org/t/p/w500/${data?.poster_path}`}
           className={classes.poster}
@@ -128,7 +135,7 @@ const MovieInformation = () => {
         <Grid item container spacing={2}>
           {data && data.credits.cast.map((character, i)=>
            character.profile_path && (
-              <Grid key={i} item xs={4} md={2} component={Link} to={`/actors/${character.id}`} style={{textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
+              <Grid key={i} item xs={4} md={2} component={Link} to={`/actors/${character.id}`} style={{textDecoration: 'none'}}>
                 <img src={`https://image.tmdb.org/t/p/w500/${character.profile_path}`} alt={character.name} className={classes.castImage} />
                 <Typography color="textPrimary" >{character?.name}</Typography>
                 <Typography color="textSecondary" align="center">{character.character.split('/')[0]}</Typography>

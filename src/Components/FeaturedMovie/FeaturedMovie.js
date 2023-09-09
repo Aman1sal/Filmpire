@@ -13,7 +13,7 @@ const FeaturedMovie = ({movie}) => {
             <CardMedia
           media="picture"
           alt={movie?.title}
-          image={movie?.backdrop_path ? `https://image.tmdb.org/t/p/original/${movie?.backdrop_path}` : 'https://www.fillmurray.com/200/300'}
+          image={movie?.backdrop_path ? `https://image.tmdb.org/t/p/original/${movie?.backdrop_path}` : 'https://loremflickr.com/640/360'}
           title={movie?.title}
           className={classes.cardMedia}
             />

@@ -10,7 +10,7 @@ import RatedCards from '../RatedCards/RatedCards'
 const Profile = () => {
   const {user} = useSelector(userSelector);
   
-  const {data: favoriteMovies, refetch: refetchFavorites} = useGetListQuery({listName: 'favorite/movies', accountId: user.id, sessionId: localStorage.getItem('session_id'), page: 1})
+  const {data: favoriteMovies, refetch: refetchFavorites} = useGetListQuery({listName: 'favourite/movies', accountId: user.id, sessionId: localStorage.getItem('session_id'), page: 1})
   const {data: WatchListMovies, refetch: refetchWatchlisted} = useGetListQuery({listName: 'watchlist/movies', accountId: user.id, sessionId: localStorage.getItem('session_id'), page: 1})
 
   useEffect(()=>{

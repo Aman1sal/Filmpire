@@ -40,7 +40,7 @@ export const tmdbApi = createApi({
           }),
         // Get user specific
           getList: builder.query({
-            query: ({listName, accountId, sessionId, page}) => `/account/${accountId}/${listName}?api_key=${tmdbApiKey}&session_id=${sessionId}&page=${page}`,
+            query: ({ accountId, sessionId, page, list }) => `account/${accountId}/${list}?api_key=${tmdbApiKey}&session_id=${sessionId}&page=${page}`,
           }),
 
         getRecommendations: builder.query({

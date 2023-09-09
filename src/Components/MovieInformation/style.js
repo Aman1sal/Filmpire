@@ -20,6 +20,10 @@ export default makeStyles((theme)=>({
             width: '50%',
             height: 'auto',
             // height: '350px',
+            display: 'flex',       // Add display: flex
+            flexDirection: 'column',  // Change flexDirection to column
+            justifyContent: 'center', // Vertically center the content
+            alignItems: 'center',    // Horizontally center the content
         },
         [theme.breakpoints.down('sm')]:{
             margin: '0 auto',
@@ -59,7 +63,7 @@ export default makeStyles((theme)=>({
         display: 'flex',
         justifyContent: 'space-between',
         width: '100%',
-        [theme.breakpoints.down('sm')]:{
+        [theme.breakpoints.down('md')]:{
             flexDirection: 'column',
 
         },
